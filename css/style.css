@@ -1,0 +1,2506 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,800,900&display=swap');
+
+/* ==========================================================================
+   SENTHURG PORTFOLIO DESIGN SYSTEM & STYLESHEET
+   - Section Headings & Tags: Satoshi Bold (700)
+   - Section Contents & Body: Manrope
+   - Navigation Header: Inter Semi Bold (600)
+   - Footer: Inter Regular (400)
+   ========================================================================== */
+
+/* --- CSS Variables / Design Tokens --- */
+:root {
+  --bg-dark: #07090e;
+  --bg-header: rgba(7, 9, 14, 0.45);
+
+  --color-primary: #ff6b00;
+  --color-primary-glow: rgba(255, 107, 0, 0.4);
+  --color-primary-glow-subtle: rgba(255, 107, 0, 0.15);
+  --color-accent: #ff8c00;
+
+  --text-main: #f0f4fc;
+  --text-muted: #8c9baf;
+  --text-subtle: #566479;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(255, 107, 0, 0.4);
+
+  /* Font Family Definitions per Specification */
+  --font-heading: 'Satoshi', sans-serif;
+  /* All Section Headings in Satoshi Bold */
+  --font-body: 'Manrope', sans-serif;
+  /* Section Contents & Body Text */
+  --font-header: 'Inter', sans-serif;
+  /* Header Navigation (Semi-Bold 600) */
+  --font-footer: 'Inter', sans-serif;
+  /* Footer Links & Text (Regular 400) */
+  --font-idcard: 'JetBrains Mono', monospace;
+  /* Developer ID Card Font */
+
+  --nav-height: 80px;
+  --container-max-width: 1200px;
+  --transition-fast: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-medium: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- Hide Default OS Mouse Cursor Across Entire Website --- */
+*,
+*::before,
+*::after,
+html,
+body,
+a,
+button,
+input,
+textarea,
+select {
+  cursor: none !important;
+}
+
+/* Prevent image selection highlight box & dragging across website */
+img {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-drag: none;
+}
+
+#bgCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#cursorCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 99999;
+}
+
+/* --- Reset & Base Styles --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  line-height: 1.6;
+  font-family: var(--font-body);
+  /* Manrope for all section contents */
+  -webkit-font-smoothing: antialiased;
+}
+
+.main-wrapper {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Background Canvas */
+#bgCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Utility Helpers */
+.text-orange {
+  color: var(--color-primary);
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+/* 4-STAGE LIQUID WATER WAVE FILL & RECEDE ANIMATION
+   - Frame 0 starts immediately with active liquid wave movement (NO static flat line pause!)
+   - 4 Distinct Wave Stages:
+     1. Wave 1: Rises high to ~38%, descends deep to ~15%
+     2. Wave 2: Rises high to ~65%, descends deep to ~40%
+     3. Wave 3: Rises high to ~88%, descends deep to ~65%
+     4. Wave 4: Surges to 100% solid orange fill and holds
+   - Outro: 4 corresponding wave rise-and-fall stages in reverse order back to 0% outline
+*/
+.wave-glow-text {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  /* Satoshi Bold */
+  letter-spacing: 0.8px;
+  color: transparent;
+  paint-order: stroke fill;
+  -webkit-paint-order: stroke fill;
+  -webkit-text-stroke: 1.2px #ff6b00;
+  /* Crisp 1.2px linear outline */
+}
+
+/* Solid Orange Water Level Overlay */
+.wave-glow-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: #ff6b00;
+  /* Solid Orange Fill */
+  -webkit-text-stroke: 0;
+  clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+  -webkit-clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+  animation: tidalWaterBounceFill 20s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+  pointer-events: none;
+}
+
+/* 20-Second High-Amplitude 60FPS Continuous Ocean Tide Timeline:
+   - Fixed X sample points (0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%, 90%, 100%) across all keyframes
+   - Eliminates all vertex topology snapping for 100% silky smooth 60-120 FPS horizontal wave gliding
+   - 0.0s - 6.5s  : Smooth 4-Stage Forward Wave Fill (0% -> 100%)
+   - 6.5s - 9.5s  : Full Filled Text State (3s Hold)
+   - 9.5s - 16.0s : Smooth 4-Stage Exact Mirror Reverse Wave Fill (100% -> 0%)
+   - 16.0s - 20.0s: Outline-Only Pause (4s Hold between cycles)
+*/
+@keyframes tidalWaterBounceFill {
+  /* ==========================================================================
+     1. HIGH-AMPLITUDE FORWARD WAVE FILL SEQUENCE (0% -> 20% -> 40% -> 60% -> 80% -> 100%)
+     ========================================================================== */
+
+  0% {
+    clip-path: polygon(0% 100%, 10% 100%, 20% 100%, 30% 100%, 40% 100%, 50% 100%, 60% 100%, 70% 100%, 80% 100%, 90% 100%, 100% 100%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 100%, 10% 100%, 20% 100%, 30% 100%, 40% 100%, 50% 100%, 60% 100%, 70% 100%, 80% 100%, 90% 100%, 100% 100%, 100% 100%, 0% 100%);
+  }
+
+  /* --- WAVE 1: 0% -> Intermediate (5%, 10%, 15%, 20%, 25%) -> Peak ~30% -> Settle 20% -> Wait 0.45s --- */
+  1.5% {
+    /* Rise to 15% | Phase θ = 90° */
+    clip-path: polygon(0% 99%, 10% 95%, 20% 85%, 30% 75%, 40% 71%, 50% 75%, 60% 85%, 70% 95%, 80% 99%, 90% 95%, 100% 85%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 99%, 10% 95%, 20% 85%, 30% 75%, 40% 71%, 50% 75%, 60% 85%, 70% 95%, 80% 99%, 90% 95%, 100% 85%, 100% 100%, 0% 100%);
+  }
+
+  3.0% {
+    /* Rise to 25% | Phase θ = 180° */
+    clip-path: polygon(0% 75%, 10% 85%, 20% 89%, 30% 85%, 40% 75%, 50% 65%, 60% 61%, 70% 65%, 80% 75%, 90% 85%, 100% 89%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 75%, 10% 85%, 20% 89%, 30% 85%, 40% 75%, 50% 65%, 60% 61%, 70% 65%, 80% 75%, 90% 85%, 100% 89%, 100% 100%, 0% 100%);
+  }
+
+  4.5% {
+    /* Peak ~30% | Phase θ = 270° */
+    clip-path: polygon(0% 56%, 10% 60%, 20% 70%, 30% 80%, 40% 84%, 50% 80%, 60% 70%, 70% 60%, 80% 56%, 90% 60%, 100% 70%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 56%, 10% 60%, 20% 70%, 30% 80%, 40% 84%, 50% 80%, 60% 70%, 70% 60%, 80% 56%, 90% 60%, 100% 70%, 100% 100%, 0% 100%);
+  }
+
+  5.5% {
+    /* Settle 20% | Phase θ = 330° */
+    clip-path: polygon(0% 73%, 10% 68%, 20% 73%, 30% 83%, 40% 92%, 50% 94%, 60% 87%, 70% 77%, 80% 73%, 90% 68%, 100% 73%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 73%, 10% 68%, 20% 73%, 30% 83%, 40% 92%, 50% 94%, 60% 87%, 70% 77%, 80% 73%, 90% 68%, 100% 73%, 100% 100%, 0% 100%);
+  }
+
+  /* Wait 0.45s at 20% with continuous horizontal wave phase advance (θ = 450°) */
+  7.75% {
+    clip-path: polygon(0% 94%, 10% 89%, 20% 80%, 30% 71%, 40% 66%, 50% 71%, 60% 80%, 70% 89%, 80% 94%, 90% 89%, 100% 80%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 94%, 10% 89%, 20% 80%, 30% 71%, 40% 66%, 50% 71%, 60% 80%, 70% 89%, 80% 94%, 90% 89%, 100% 80%, 100% 100%, 0% 100%);
+  }
+
+  /* --- WAVE 2: 20% -> Intermediate (25%, 30%, 35%, 40%, 45%) -> Peak ~50% -> Settle 40% -> Wait 0.45s --- */
+  9.25% {
+    /* Rise to 35% | Phase θ = 540° */
+    clip-path: polygon(0% 65%, 10% 75%, 20% 79%, 30% 75%, 40% 65%, 50% 55%, 60% 51%, 70% 55%, 80% 65%, 90% 75%, 100% 79%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 65%, 10% 75%, 20% 79%, 30% 75%, 40% 65%, 50% 55%, 60% 51%, 70% 55%, 80% 65%, 90% 75%, 100% 79%, 100% 100%, 0% 100%);
+  }
+
+  10.75% {
+    /* Rise to 45% | Phase θ = 630° */
+    clip-path: polygon(0% 41%, 10% 45%, 20% 55%, 30% 65%, 40% 69%, 50% 65%, 60% 55%, 70% 45%, 80% 41%, 90% 45%, 100% 55%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 41%, 10% 45%, 20% 55%, 30% 65%, 40% 69%, 50% 65%, 60% 55%, 70% 45%, 80% 41%, 90% 45%, 100% 55%, 100% 100%, 0% 100%);
+  }
+
+  12.25% {
+    /* Peak ~50% | Phase θ = 720° */
+    clip-path: polygon(0% 50%, 10% 40%, 20% 36%, 30% 40%, 40% 50%, 50% 60%, 60% 64%, 70% 60%, 80% 50%, 90% 40%, 100% 36%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 50%, 10% 40%, 20% 36%, 30% 40%, 40% 50%, 50% 60%, 60% 64%, 70% 60%, 80% 50%, 90% 40%, 100% 36%, 100% 100%, 0% 100%);
+  }
+
+  13.25% {
+    /* Settle 40% | Phase θ = 780° */
+    clip-path: polygon(0% 53%, 10% 48%, 20% 53%, 30% 63%, 40% 72%, 50% 74%, 60% 67%, 70% 57%, 80% 53%, 90% 48%, 100% 53%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 53%, 10% 48%, 20% 53%, 30% 63%, 40% 72%, 50% 74%, 60% 67%, 70% 57%, 80% 53%, 90% 48%, 100% 53%, 100% 100%, 0% 100%);
+  }
+
+  /* Wait 0.45s at 40% with continuous horizontal wave phase advance (θ = 900°) */
+  15.5% {
+    clip-path: polygon(0% 74%, 10% 69%, 20% 60%, 30% 51%, 40% 46%, 50% 51%, 60% 60%, 70% 69%, 80% 74%, 90% 69%, 100% 60%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 74%, 10% 69%, 20% 60%, 30% 51%, 40% 46%, 50% 51%, 60% 60%, 70% 69%, 80% 74%, 90% 69%, 100% 60%, 100% 100%, 0% 100%);
+  }
+
+  /* --- WAVE 3: 40% -> Intermediate (45%, 50%, 55%, 60%, 65%) -> Peak ~70% -> Settle 60% -> Wait 0.45s --- */
+  17.0% {
+    /* Rise to 55% | Phase θ = 990° */
+    clip-path: polygon(0% 45%, 10% 55%, 20% 59%, 30% 55%, 40% 45%, 50% 35%, 60% 31%, 70% 35%, 80% 45%, 90% 55%, 100% 59%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 45%, 10% 55%, 20% 59%, 30% 55%, 40% 45%, 50% 35%, 60% 31%, 70% 35%, 80% 45%, 90% 55%, 100% 59%, 100% 100%, 0% 100%);
+  }
+
+  18.5% {
+    /* Rise to 65% | Phase θ = 1080° */
+    clip-path: polygon(0% 35%, 10% 25%, 20% 21%, 30% 25%, 40% 35%, 50% 45%, 60% 49%, 70% 45%, 80% 35%, 90% 25%, 100% 21%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 35%, 10% 25%, 20% 21%, 30% 25%, 40% 35%, 50% 45%, 60% 49%, 70% 45%, 80% 35%, 90% 25%, 100% 21%, 100% 100%, 0% 100%);
+  }
+
+  20.0% {
+    /* Peak ~70% | Phase θ = 1170° */
+    clip-path: polygon(0% 16%, 10% 20%, 20% 30%, 30% 40%, 40% 44%, 50% 40%, 60% 30%, 70% 20%, 80% 16%, 90% 20%, 100% 30%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 16%, 10% 20%, 20% 30%, 30% 40%, 40% 44%, 50% 40%, 60% 30%, 70% 20%, 80% 16%, 90% 20%, 100% 30%, 100% 100%, 0% 100%);
+  }
+
+  21.0% {
+    /* Settle 60% | Phase θ = 1230° */
+    clip-path: polygon(0% 33%, 10% 28%, 20% 33%, 30% 43%, 40% 52%, 50% 54%, 60% 47%, 70% 37%, 80% 33%, 90% 28%, 100% 33%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 33%, 10% 28%, 20% 33%, 30% 43%, 40% 52%, 50% 54%, 60% 47%, 70% 37%, 80% 33%, 90% 28%, 100% 33%, 100% 100%, 0% 100%);
+  }
+
+  /* Wait 0.45s at 60% with continuous horizontal wave phase advance (θ = 1350°) */
+  23.25% {
+    clip-path: polygon(0% 54%, 10% 49%, 20% 40%, 30% 31%, 40% 26%, 50% 31%, 60% 40%, 70% 49%, 80% 54%, 90% 49%, 100% 40%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 54%, 10% 49%, 20% 40%, 30% 31%, 40% 26%, 50% 31%, 60% 40%, 70% 49%, 80% 54%, 90% 49%, 100% 40%, 100% 100%, 0% 100%);
+  }
+
+  /* --- WAVE 4: 60% -> Intermediate (65%, 70%, 75%, 80%, 85%) -> Peak ~90% -> Settle 80% -> Wait 0.45s --- */
+  24.75% {
+    /* Rise to 75% | Phase θ = 1440° */
+    clip-path: polygon(0% 25%, 10% 35%, 20% 39%, 30% 35%, 40% 25%, 50% 15%, 60% 11%, 70% 15%, 80% 25%, 90% 35%, 100% 39%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 25%, 10% 35%, 20% 39%, 30% 35%, 40% 25%, 50% 15%, 60% 11%, 70% 15%, 80% 25%, 90% 35%, 100% 39%, 100% 100%, 0% 100%);
+  }
+
+  26.25% {
+    /* Rise to 85% | Phase θ = 1530° */
+    clip-path: polygon(0% 15%, 10% 5%, 20% 1%, 30% 5%, 40% 15%, 50% 25%, 60% 29%, 70% 25%, 80% 15%, 90% 5%, 100% 1%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 15%, 10% 5%, 20% 1%, 30% 5%, 40% 15%, 50% 25%, 60% 29%, 70% 25%, 80% 15%, 90% 5%, 100% 1%, 100% 100%, 0% 100%);
+  }
+
+  27.75% {
+    /* Peak ~90% | Phase θ = 1620° */
+    clip-path: polygon(0% -4%, 10% 0%, 20% 10%, 30% 20%, 40% 24%, 50% 20%, 60% 10%, 70% 0%, 80% -4%, 90% 0%, 100% 10%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% -4%, 10% 0%, 20% 10%, 30% 20%, 40% 24%, 50% 20%, 60% 10%, 70% 0%, 80% -4%, 90% 0%, 100% 10%, 100% 100%, 0% 100%);
+  }
+
+  28.75% {
+    /* Settle 80% | Phase θ = 1680° */
+    clip-path: polygon(0% 13%, 10% 8%, 20% 13%, 30% 23%, 40% 32%, 50% 34%, 60% 27%, 70% 17%, 80% 13%, 90% 8%, 100% 13%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 13%, 10% 8%, 20% 13%, 30% 23%, 40% 32%, 50% 34%, 60% 27%, 70% 17%, 80% 13%, 90% 8%, 100% 13%, 100% 100%, 0% 100%);
+  }
+
+  /* Wait 0.45s at 80% with continuous horizontal wave phase advance (θ = 1800°) */
+  31.0% {
+    clip-path: polygon(0% 20%, 10% 30%, 20% 34%, 30% 30%, 40% 20%, 50% 10%, 60% 6%, 70% 10%, 80% 20%, 90% 30%, 100% 34%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 20%, 10% 30%, 20% 34%, 30% 30%, 40% 20%, 50% 10%, 60% 6%, 70% 10%, 80% 20%, 90% 30%, 100% 34%, 100% 100%, 0% 100%);
+  }
+
+  /* --- FINAL PUSH: 80% -> 95% -> 100% Smooth Full Fill --- */
+  31.8% {
+    clip-path: polygon(0% 0%, 10% -6%, 20% 5%, 30% 13%, 40% 15%, 50% 10%, 60% 0%, 70% -6%, 80% 0%, 90% 5%, 100% 13%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 0%, 10% -6%, 20% 5%, 30% 13%, 40% 15%, 50% 10%, 60% 0%, 70% -6%, 80% 0%, 90% 5%, 100% 13%, 100% 100%, 0% 100%);
+  }
+
+  32.5% {
+    /* 100% Complete Solid Orange Fill */
+    clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
+  }
+
+  /* ==========================================================================
+     2. FULL FILLED TEXT STATE (3.0 Seconds Hold: 32.5% -> 47.5%)
+     ========================================================================== */
+  32.5%,
+  47.5% {
+    clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
+  }
+
+  /* ==========================================================================
+     3. HIGH-AMPLITUDE EXACT MIRROR REVERSE WAVE FILL SEQUENCE (100% -> 0%)
+     ========================================================================== */
+
+  /* --- REVERSE WAVE 1: 100% -> Fall -> Dip 70% -> Settle 80% -> Hold 0.45s --- */
+  49.0% {
+    clip-path: polygon(0% -2%, 10% -8%, 20% 2%, 30% 12%, 40% 16%, 50% 12%, 60% 2%, 70% -8%, 80% -2%, 90% 2%, 100% 12%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% -2%, 10% -8%, 20% 2%, 30% 12%, 40% 16%, 50% 12%, 60% 2%, 70% -8%, 80% -2%, 90% 2%, 100% 12%, 100% 100%, 0% 100%);
+  }
+
+  50.5% {
+    clip-path: polygon(0% 15%, 10% 5%, 20% 1%, 30% 5%, 40% 15%, 50% 25%, 60% 29%, 70% 25%, 80% 15%, 90% 5%, 100% 1%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 15%, 10% 5%, 20% 1%, 30% 5%, 40% 15%, 50% 25%, 60% 29%, 70% 25%, 80% 15%, 90% 5%, 100% 1%, 100% 100%, 0% 100%);
+  }
+
+  52.0% {
+    /* Dip 70% */
+    clip-path: polygon(0% 44%, 10% 34%, 20% 30%, 30% 34%, 40% 44%, 50% 54%, 60% 58%, 70% 54%, 80% 44%, 90% 34%, 100% 30%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 44%, 10% 34%, 20% 30%, 30% 34%, 40% 44%, 50% 54%, 60% 58%, 70% 54%, 80% 44%, 90% 34%, 100% 30%, 100% 100%, 0% 100%);
+  }
+
+  53.0% {
+    /* Settle 80% */
+    clip-path: polygon(0% 13%, 10% 8%, 20% 13%, 30% 23%, 40% 32%, 50% 34%, 60% 27%, 70% 17%, 80% 13%, 90% 8%, 100% 13%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 13%, 10% 8%, 20% 13%, 30% 23%, 40% 32%, 50% 34%, 60% 27%, 70% 17%, 80% 13%, 90% 8%, 100% 13%, 100% 100%, 0% 100%);
+  }
+
+  /* Hold 0.45s at 80% with continuous horizontal wave phase advance */
+  55.25% {
+    clip-path: polygon(0% 20%, 10% 30%, 20% 34%, 30% 30%, 40% 20%, 50% 10%, 60% 6%, 70% 10%, 80% 20%, 90% 30%, 100% 34%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 20%, 10% 30%, 20% 34%, 30% 30%, 40% 20%, 50% 10%, 60% 6%, 70% 10%, 80% 20%, 90% 30%, 100% 34%, 100% 100%, 0% 100%);
+  }
+
+  /* --- REVERSE WAVE 2: 80% -> Fall -> Dip 50% -> Settle 60% -> Hold 0.45s --- */
+  56.75% {
+    clip-path: polygon(0% 35%, 10% 45%, 20% 49%, 30% 45%, 40% 35%, 50% 25%, 60% 21%, 70% 25%, 80% 35%, 90% 45%, 100% 49%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 35%, 10% 45%, 20% 49%, 30% 45%, 40% 35%, 50% 25%, 60% 21%, 70% 25%, 80% 35%, 90% 45%, 100% 49%, 100% 100%, 0% 100%);
+  }
+
+  58.25% {
+    clip-path: polygon(0% 45%, 10% 35%, 20% 31%, 30% 35%, 40% 45%, 50% 55%, 60% 59%, 70% 55%, 80% 45%, 90% 35%, 100% 31%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 45%, 10% 35%, 20% 31%, 30% 35%, 40% 45%, 50% 55%, 60% 59%, 70% 55%, 80% 45%, 90% 35%, 100% 31%, 100% 100%, 0% 100%);
+  }
+
+  59.75% {
+    /* Dip 50% */
+    clip-path: polygon(0% 64%, 10% 54%, 20% 50%, 30% 54%, 40% 64%, 50% 74%, 60% 78%, 70% 74%, 80% 64%, 90% 54%, 100% 50%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 64%, 10% 54%, 20% 50%, 30% 54%, 40% 64%, 50% 74%, 60% 78%, 70% 74%, 80% 64%, 90% 54%, 100% 50%, 100% 100%, 0% 100%);
+  }
+
+  60.75% {
+    /* Settle 60% */
+    clip-path: polygon(0% 33%, 10% 28%, 20% 33%, 30% 43%, 40% 52%, 50% 54%, 60% 47%, 70% 37%, 80% 33%, 90% 28%, 100% 33%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 33%, 10% 28%, 20% 33%, 30% 43%, 40% 52%, 50% 54%, 60% 47%, 70% 37%, 80% 33%, 90% 28%, 100% 33%, 100% 100%, 0% 100%);
+  }
+
+  /* Hold 0.45s at 60% with continuous horizontal wave phase advance */
+  63.0% {
+    clip-path: polygon(0% 40%, 10% 50%, 20% 54%, 30% 50%, 40% 40%, 50% 30%, 60% 26%, 70% 30%, 80% 40%, 90% 50%, 100% 54%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 40%, 10% 50%, 20% 54%, 30% 50%, 40% 40%, 50% 30%, 60% 26%, 70% 30%, 80% 40%, 90% 50%, 100% 54%, 100% 100%, 0% 100%);
+  }
+
+  /* --- REVERSE WAVE 3: 60% -> Fall -> Dip 30% -> Settle 40% -> Hold 0.45s --- */
+  64.5% {
+    clip-path: polygon(0% 55%, 10% 65%, 20% 69%, 30% 65%, 40% 55%, 50% 45%, 60% 41%, 70% 45%, 80% 55%, 90% 65%, 100% 69%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 55%, 10% 65%, 20% 69%, 30% 65%, 40% 55%, 50% 45%, 60% 41%, 70% 45%, 80% 55%, 90% 65%, 100% 69%, 100% 100%, 0% 100%);
+  }
+
+  66.0% {
+    clip-path: polygon(0% 65%, 10% 55%, 20% 51%, 30% 55%, 40% 65%, 50% 75%, 60% 79%, 70% 75%, 80% 65%, 90% 55%, 100% 51%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 65%, 10% 55%, 20% 51%, 30% 55%, 40% 65%, 50% 75%, 60% 79%, 70% 75%, 80% 65%, 90% 55%, 100% 51%, 100% 100%, 0% 100%);
+  }
+
+  67.5% {
+    /* Dip 30% */
+    clip-path: polygon(0% 84%, 10% 74%, 20% 70%, 30% 74%, 40% 84%, 50% 94%, 60% 98%, 70% 94%, 80% 84%, 90% 74%, 100% 70%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 84%, 10% 74%, 20% 70%, 30% 74%, 40% 84%, 50% 94%, 60% 98%, 70% 94%, 80% 84%, 90% 74%, 100% 70%, 100% 100%, 0% 100%);
+  }
+
+  68.5% {
+    /* Settle 40% */
+    clip-path: polygon(0% 53%, 10% 48%, 20% 53%, 30% 63%, 40% 72%, 50% 74%, 60% 67%, 70% 57%, 80% 53%, 90% 48%, 100% 53%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 53%, 10% 48%, 20% 53%, 30% 63%, 40% 72%, 50% 74%, 60% 67%, 70% 57%, 80% 53%, 90% 48%, 100% 53%, 100% 100%, 0% 100%);
+  }
+
+  /* Hold 0.45s at 40% with continuous horizontal wave phase advance */
+  70.75% {
+    clip-path: polygon(0% 60%, 10% 70%, 20% 74%, 30% 70%, 40% 60%, 50% 50%, 60% 46%, 70% 50%, 80% 60%, 90% 70%, 100% 74%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 60%, 10% 70%, 20% 74%, 30% 70%, 40% 60%, 50% 50%, 60% 46%, 70% 50%, 80% 60%, 90% 70%, 100% 74%, 100% 100%, 0% 100%);
+  }
+
+  /* --- REVERSE WAVE 4: 40% -> Fall -> Dip 10% -> Settle 20% -> Hold 0.45s --- */
+  72.25% {
+    clip-path: polygon(0% 75%, 10% 85%, 20% 89%, 30% 85%, 40% 75%, 50% 65%, 60% 61%, 70% 65%, 80% 75%, 90% 85%, 100% 89%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 75%, 10% 85%, 20% 89%, 30% 85%, 40% 75%, 50% 65%, 60% 61%, 70% 65%, 80% 75%, 90% 85%, 100% 89%, 100% 100%, 0% 100%);
+  }
+
+  73.75% {
+    clip-path: polygon(0% 85%, 10% 75%, 20% 71%, 30% 75%, 40% 85%, 50% 95%, 60% 99%, 70% 95%, 80% 85%, 90% 75%, 100% 71%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 85%, 10% 75%, 20% 71%, 30% 75%, 40% 85%, 50% 95%, 60% 99%, 70% 95%, 80% 85%, 90% 75%, 100% 71%, 100% 100%, 0% 100%);
+  }
+
+  75.25% {
+    /* Dip 10% */
+    clip-path: polygon(0% 98%, 10% 94%, 20% 90%, 30% 94%, 40% 98%, 50% 100%, 60% 100%, 70% 100%, 80% 98%, 90% 94%, 100% 90%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 98%, 10% 94%, 20% 90%, 30% 94%, 40% 98%, 50% 100%, 60% 100%, 70% 100%, 80% 98%, 90% 94%, 100% 90%, 100% 100%, 0% 100%);
+  }
+
+  76.25% {
+    /* Settle 20% */
+    clip-path: polygon(0% 73%, 10% 68%, 20% 73%, 30% 83%, 40% 92%, 50% 94%, 60% 87%, 70% 77%, 80% 73%, 90% 68%, 100% 73%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 73%, 10% 68%, 20% 73%, 30% 83%, 40% 92%, 50% 94%, 60% 87%, 70% 77%, 80% 73%, 90% 68%, 100% 73%, 100% 100%, 0% 100%);
+  }
+
+  /* Hold 0.45s at 20% with continuous horizontal wave phase advance */
+  78.5% {
+    clip-path: polygon(0% 80%, 10% 90%, 20% 94%, 30% 90%, 40% 80%, 50% 70%, 60% 66%, 70% 70%, 80% 80%, 90% 90%, 100% 94%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 80%, 10% 90%, 20% 94%, 30% 90%, 40% 80%, 50% 70%, 60% 66%, 70% 70%, 80% 80%, 90% 90%, 100% 94%, 100% 100%, 0% 100%);
+  }
+
+  /* --- FINAL REVERSE: 20% -> Fall -> Clean 0% Outline State --- */
+  79.25% {
+    clip-path: polygon(0% 95%, 10% 99%, 20% 95%, 30% 85%, 40% 81%, 50% 85%, 60% 95%, 70% 99%, 80% 95%, 90% 85%, 100% 81%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 95%, 10% 99%, 20% 95%, 30% 85%, 40% 81%, 50% 85%, 60% 95%, 70% 99%, 80% 95%, 90% 85%, 100% 81%, 100% 100%, 0% 100%);
+  }
+
+  80.0% {
+    /* Reach 0% Clean Outline State */
+    clip-path: polygon(0% 100%, 10% 100%, 20% 100%, 30% 100%, 40% 100%, 50% 100%, 60% 100%, 70% 100%, 80% 100%, 90% 100%, 100% 100%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 100%, 10% 100%, 20% 100%, 30% 100%, 40% 100%, 50% 100%, 60% 100%, 70% 100%, 80% 100%, 90% 100%, 100% 100%, 100% 100%, 0% 100%);
+  }
+
+  /* ==========================================================================
+     4. OUTLINE-ONLY PAUSE BETWEEN CYCLES (4.0 Seconds Hold: 80.0% -> 100.0%)
+     ========================================================================== */
+  80.0%,
+  100% {
+    /* 4-Second Calm Pause at Clean 1.2px Outline State before next cycle */
+    clip-path: polygon(0% 100%, 10% 100%, 20% 100%, 30% 100%, 40% 100%, 50% 100%, 60% 100%, 70% 100%, 80% 100%, 90% 100%, 100% 100%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 100%, 10% 100%, 20% 100%, 30% 100%, 40% 100%, 50% 100%, 60% 100%, 70% 100%, 80% 100%, 90% 100%, 100% 100%, 100% 100%, 0% 100%);
+  }
+}
+
+/* --- NAVIGATION HEADER (Inter Semi-Bold 600) --- */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--nav-height);
+  background: var(--bg-header);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  z-index: 1000;
+  transition: var(--transition-medium);
+  font-family: var(--font-header);
+}
+
+.nav-container {
+  max-width: var(--container-max-width);
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  /* Satoshi Bold */
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+}
+
+.logo-accent {
+  color: var(--color-primary);
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 2.2rem;
+}
+
+.nav-link {
+  position: relative;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: var(--font-header);
+  font-size: 0.95rem;
+  font-weight: 600;
+  /* Inter Semi-Bold */
+  transition: var(--transition-fast);
+  padding: 0.4rem 0;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #ffffff;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-primary);
+  box-shadow: 0 0 10px var(--color-primary);
+  border-radius: 2px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mobile-nav-cta {
+  display: none !important;
+}
+
+.header-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.3rem;
+  border-radius: 50px;
+  border: 1px solid var(--color-primary);
+  background: rgba(255, 107, 0, 0.15);
+  color: #ffffff;
+  box-shadow: 0 0 20px var(--color-primary-glow-subtle);
+  backdrop-filter: blur(8px);
+  text-decoration: none;
+  font-family: var(--font-header);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-get-in-touch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.3rem;
+  border-radius: 50px;
+  border: 1px solid var(--color-primary);
+  background: rgba(255, 107, 0, 0.15);
+  color: #ffffff;
+  box-shadow: 0 0 20px var(--color-primary-glow-subtle);
+  backdrop-filter: blur(8px);
+  text-decoration: none;
+  font-family: var(--font-header);
+  font-size: 0.9rem;
+  font-weight: 600;
+  /* Inter Semi-Bold */
+  transition: var(--transition-fast);
+}
+
+.btn-get-in-touch:hover,
+.header-cta:hover {
+  background: rgba(255, 107, 0, 0.2);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 20px var(--color-primary-glow);
+  transform: translateY(-2px);
+}
+
+/* Crisp 3-Bar Hamburger Button */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1005;
+}
+
+.hamburger-btn .bar {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: #ffffff;
+  border-radius: 3px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hamburger-btn.active .bar:nth-child(1) {
+  transform: translateY(8.5px) rotate(45deg);
+  background-color: var(--color-primary);
+}
+
+.hamburger-btn.active .bar:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger-btn.active .bar:nth-child(3) {
+  transform: translateY(-8.5px) rotate(-45deg);
+  background-color: var(--color-primary);
+}
+
+/* --- Section Structure & Spacious Layout --- */
+section {
+  position: relative;
+  padding: 4.8rem 0 3.8rem;
+  scroll-margin-top: calc(var(--nav-height) + 1rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.section-container {
+  max-width: var(--container-max-width);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+  z-index: 2;
+}
+
+.section-tag {
+  display: inline-block;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  /* Satoshi Bold */
+  letter-spacing: 1.5px;
+  margin-bottom: 0.8rem;
+}
+
+.section-heading {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 700;
+  /* Satoshi Bold */
+  line-height: 1.18;
+  color: #ffffff;
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.8px;
+}
+
+/* Section Contents & Subtitles in Manrope */
+.section-subtitle {
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 1.08rem;
+  line-height: 1.65;
+  max-width: 620px;
+  margin-bottom: 3rem;
+}
+
+/* Home Section Scroll Down Indicator */
+.scroll-indicator-container {
+  position: relative;
+  margin-top: -5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.scroll-down-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  transition: var(--transition-fast);
+}
+
+.scroll-down-indicator:hover {
+  color: var(--color-primary);
+}
+
+.mouse-icon {
+  width: 22px;
+  height: 36px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  position: relative;
+}
+
+.mouse-icon .wheel {
+  width: 4px;
+  height: 8px;
+  background: var(--color-primary);
+  border-radius: 2px;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: mouseWheel 1.8s infinite;
+}
+
+@keyframes mouseWheel {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+}
+
+/* --- SECTION 1: HERO / HOME --- */
+.hero-section {
+  padding-top: calc(var(--nav-height) + 2.5rem);
+  padding-bottom: 2rem;
+  min-height: auto;
+}
+
+.hero-container {
+  max-width: var(--container-max-width);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.1rem;
+  background: rgba(255, 107, 0, 0.08);
+  border: 1px solid rgba(255, 107, 0, 0.25);
+  border-radius: 30px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  /* Satoshi Bold */
+  letter-spacing: 1.8px;
+  color: var(--text-main);
+  margin-bottom: 1.8rem;
+  font-family: var(--font-heading);
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-primary);
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  font-weight: 700;
+  /* Satoshi Bold */
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title .wave-glow-text,
+.hero-title .text-orange {
+  white-space: nowrap !important;
+  display: inline-block !important;
+}
+
+.hero-subtitle {
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 1.12rem;
+  line-height: 1.7;
+  max-width: 520px;
+  margin-bottom: 2.4rem;
+}
+
+.btn-download-resume {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 2rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  text-decoration: none;
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: var(--transition-fast);
+  backdrop-filter: blur(8px);
+}
+
+.btn-download-resume:hover {
+  background: rgba(255, 107, 0, 0.15);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 25px var(--color-primary-glow);
+  transform: translateY(-2px);
+}
+
+.hero-bullets {
+  margin-top: -1.2rem;
+  margin-bottom: 2.2rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.hero-social-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.hero-social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.hero-social-btn:hover {
+  background: rgba(255, 107, 0, 0.15);
+  border-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 0 22px var(--color-primary-glow);
+  transform: translateY(-3px) scale(1.06);
+}
+
+/* Hero Python Code Snippet Block */
+.hero-code-snippet {
+  margin-top: 1.8rem;
+  border: none;
+  border-radius: none;
+  padding: 0.8rem 1.2rem 1rem;
+  max-width: 380px;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.code-snippet-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.code-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.code-dot.red {
+  background: #ff5f56;
+}
+
+.code-dot.yellow {
+  background: #ffbd2e;
+}
+
+.code-dot.green {
+  background: #27c93f;
+}
+
+.code-filename {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-left: 0.4rem;
+  letter-spacing: 0.5px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.code-snippet-body {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre;
+  color: #f0f4fc;
+}
+
+.code-snippet-body .kw {
+  color: #ff7b00;
+  font-weight: 600;
+}
+
+.code-snippet-body .fn {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.code-snippet-body .str {
+  color: #00ff88;
+}
+
+.hero-visual,
+.about-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.seamless-graphic-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.hero-profile-img {
+  width: 250%;
+  max-width: 650px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  mix-blend-mode: lighten;
+  filter: contrast(1.05) brightness(1.05);
+  mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 88%);
+  -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 88%);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.about-profile-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 12px;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* --- DEVELOPER ACCESS CARD (.dev-id-card) MATCHING REFERENCE IMAGE --- */
+.dev-id-card {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  background: rgba(14, 16, 20, 0.88);
+  border: 1px solid rgba(255, 107, 0, 0.25);
+  border-radius: none;
+  padding: 1.3rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 107, 0, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+  font-family: var(--font-idcard);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.dev-id-card:hover {
+  border-color: rgba(255, 107, 0, 0.5);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 45px rgba(255, 107, 0, 0.15);
+}
+
+/* Reference Brackets (Top-Left & Bottom-Right) */
+.card-bracket {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: var(--color-primary);
+  border-style: solid;
+  pointer-events: none;
+  z-index: 5;
+  transition: box-shadow 0.35s ease;
+}
+
+.card-bracket.top-left {
+  top: 0px;
+  left: 0px;
+  border-width: 2px 0 0 2px;
+}
+
+.card-bracket.bottom-right {
+  bottom: 0px;
+  right: 0px;
+  border-width: 0 2px 2px 0;
+}
+
+
+/* Header Row */
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.9rem;
+}
+
+.card-header-title {
+  font-family: var(--font-idcard);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--color-primary);
+  opacity: 0.9;
+}
+
+.card-header-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--color-primary);
+  animation: dotBlink 1s infinite alternate ease-in-out;
+}
+
+@keyframes dotBlink {
+  0% {
+    opacity: 1;
+    box-shadow: 0 0 10px currentColor;
+  }
+
+  100% {
+    opacity: 0.15;
+    box-shadow: 0 0 2px currentColor;
+  }
+}
+
+/* Photo Wrapper & Laser Scan Effect */
+.card-photo-wrapper {
+  position: relative;
+  width: 100%;
+  max-height: 410px;
+  border: 1px solid rgba(255, 107, 0, 0.2);
+  border-radius: none;
+  overflow: hidden;
+  margin-bottom: 1.2rem;
+  background: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.photo-grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(255, 107, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 107, 0, 0.06) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.photo-laser-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff7b00, transparent);
+  box-shadow: 0 0 12px #ff7b00, 0 0 20px #ff7b00;
+  z-index: 4;
+  pointer-events: none;
+  animation: laserScan 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes laserScan {
+  0% {
+    top: 0%;
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0.3;
+  }
+}
+
+.about-profile-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Card Body Info */
+.card-body-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.card-user-name {
+  font-family: var(--font-idcard);
+  font-size: 0.98rem;
+  font-weight: 400;
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+
+.card-user-role {
+  font-family: var(--font-idcard);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  color: var(--color-primary);
+}
+
+.card-dashed-divider {
+  width: 100%;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+  margin: 0.8rem 0;
+}
+
+.card-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-idcard);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.card-access-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #00ff88;
+}
+
+.card-access-status .status-dot {
+  width: 6px;
+  height: 6px;
+  background: #00ff88;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00ff88;
+  animation: dotBlink 1s infinite alternate ease-in-out;
+}
+
+.card-id-code {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* --- SECTION 2: ABOUT --- */
+.about-section {
+  padding-bottom: 3.5rem;
+  padding-top: 7rem;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 4rem;
+}
+
+.about-description {
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 1.08rem;
+  line-height: 1.75;
+  margin-bottom: 2.2rem;
+}
+
+.about-bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.4rem;
+  font-family: var(--font-body);
+  /* Manrope */
+}
+
+.about-bullets li {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: var(--text-main);
+  font-size: 0.98rem;
+}
+
+.bullet-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-primary);
+}
+
+.about-info-cards {
+  display: flex;
+  gap: 1.5rem;
+  font-family: var(--font-body);
+  /* Manrope */
+}
+
+.info-card {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 0.8rem 1.2rem;
+  background: transparent;
+  border: none;
+  flex: 1;
+}
+
+.info-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 107, 0, 0.1);
+  border: 1px solid rgba(255, 107, 0, 0.25);
+  border-radius: 10px;
+  color: var(--color-primary);
+}
+
+.info-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  display: block;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* --- SECTION 3: NUMBERS / OVERVIEW (SEAMLESS FLOW AFTER ABOUT) --- */
+.overview-section {
+  padding-top: 2.5rem;
+  padding-bottom: 7.5rem;
+}
+
+.overview-header {
+  text-align: left;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1040px;
+  margin: 2.5rem auto 0 auto;
+  font-family: var(--font-body);
+  /* Manrope */
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  transition: var(--transition-medium);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 107, 0, 0.04);
+  border-color: rgba(255, 107, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(255, 107, 0, 0.15);
+}
+
+.stat-card:hover .stat-number {
+  text-shadow: 0 0 20px var(--color-primary);
+}
+
+.stat-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 107, 0, 0.08);
+  border: 1px solid rgba(255, 107, 0, 0.2);
+  border-radius: 50%;
+  margin-bottom: 0.8rem;
+}
+
+.stat-number {
+  font-family: var(--font-heading);
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.stat-label {
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 0.98rem;
+  font-weight: 500;
+}
+
+/* --- SECTION 4 & SECTION 6: STRAIGHT CENTER TIMELINE LAYOUT (PURE CSS) --- */
+.zigzag-timeline-wrapper {
+  position: relative;
+  width: 100%;
+  margin-top: 2rem;
+  font-family: var(--font-body);
+}
+
+/* Pure CSS Glowing Center Vertical Line */
+.zigzag-timeline-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3.5px;
+  background: linear-gradient(180deg, #ff7b00 0%, #ff9900 50%, #ff4400 100%);
+  box-shadow: 0 0 14px rgba(255, 107, 0, 0.45);
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.zigzag-timeline-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+  z-index: 2;
+}
+
+.zigzag-row {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+/* POSITIONING: RIGHT-SIDE CARD (NODE 01, 03) */
+.zigzag-row.right-side {
+  align-items: center;
+}
+
+.zigzag-row.right-side .zigzag-card {
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+}
+
+.zigzag-row.right-side .center-node {
+  grid-column: 2;
+}
+
+.zigzag-row.right-side .connector-line-horizontal {
+  position: absolute;
+  left: 50%;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, #ff6b00, rgba(255, 107, 0, 0.3));
+  box-shadow: 0 0 8px var(--color-primary);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.zigzag-row.right-side .node-number {
+  position: absolute;
+  top: 50%;
+  right: calc(50% + 20px);
+  transform: translateY(-50%);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.05em;
+  z-index: 5;
+  white-space: nowrap;
+}
+
+/* POSITIONING: LEFT-SIDE CARD (NODE 02, 04) */
+.zigzag-row.left-side {
+  align-items: center;
+}
+
+.zigzag-row.left-side .zigzag-card {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+}
+
+.zigzag-row.left-side .center-node {
+  grid-column: 2;
+}
+
+.zigzag-row.left-side .connector-line-horizontal {
+  position: absolute;
+  right: 50%;
+  left: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(270deg, #ff6b00, rgba(255, 107, 0, 0.3));
+  box-shadow: 0 0 8px var(--color-primary);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.zigzag-row.left-side .node-number {
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 20px);
+  transform: translateY(-50%);
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: 0.05em;
+  z-index: 5;
+  white-space: nowrap;
+}
+
+/* Shared Center Node & Dot Properties */
+.center-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  z-index: 3;
+}
+
+.main-node-dot {
+  width: 22px;
+  height: 22px;
+  background: var(--bg-dark);
+  border: 3px solid var(--color-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px var(--color-primary), 0 0 30px var(--color-primary-glow);
+  transition: var(--transition-fast);
+  z-index: 4;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dot-inner {
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #ffffff;
+}
+
+.zigzag-row:hover .main-node-dot {
+  transform: translate(-50%, -50%) scale(1.25);
+  border-color: #ff9900;
+}
+
+.connector-line-horizontal {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, #ff6b00, rgba(255, 107, 0, 0.4));
+  box-shadow: 0 0 8px var(--color-primary);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.zigzag-card {
+  background: transparent;
+  border: none;
+  border-radius: 16px;
+  padding: 1.2rem 1.4rem;
+  display: flex;
+  gap: 1.4rem;
+  align-items: center;
+  transition: var(--transition-medium);
+}
+
+.zigzag-card:hover {
+  transform: translateY(-4px);
+}
+
+.card-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 107, 0, 0.08);
+  border: 1px solid rgba(255, 107, 0, 0.2);
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.card-year {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 0.4rem;
+  font-family: var(--font-body);
+  /* Manrope */
+}
+
+.card-title {
+  font-family: var(--font-body);
+  /* Manrope for card titles */
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.4rem;
+}
+
+.card-institution {
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 0.92rem;
+  margin-bottom: 0.9rem;
+}
+
+.card-badge {
+  display: inline-block;
+  padding: 0.28rem 0.8rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: var(--font-body);
+  /* Manrope */
+}
+
+/* --- SECTION 5: SKILLS / TECHNOLOGIES --- */
+.skills-header-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 3.5rem;
+}
+
+.skills-compact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  font-family: var(--font-body);
+  /* Manrope */
+}
+
+.skill-card-compact {
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  padding: 1.2rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  transition: var(--transition-medium);
+}
+
+.skill-card-compact:hover {
+  transform: translateY(-4px);
+}
+
+.skill-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.skill-name {
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.4rem;
+}
+
+.skill-demo-badge {
+  display: inline-block;
+  padding: 0.25rem 0.8rem;
+  background: rgba(255, 107, 0, 0.12);
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #ffffff;
+  box-shadow: 0 0 10px var(--color-primary-glow-subtle);
+  font-family: var(--font-body);
+  /* Manrope */
+}
+
+/* --- SECTION 6: PROJECTS --- */
+.project-card {
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+  font-family: var(--font-body);
+  /* Manrope */
+}
+
+.project-card-header {
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+}
+
+.project-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 107, 0, 0.08);
+  border: 1px solid rgba(255, 107, 0, 0.2);
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.project-title {
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.4rem;
+}
+
+.project-desc {
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.p-tag {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  /* Manrope */
+}
+
+.project-actions {
+  display: flex;
+  gap: 0.9rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.btn-proj-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  font-family: var(--font-body);
+  /* Manrope */
+  transition: var(--transition-fast);
+}
+
+.btn-demo {
+  background: rgba(255, 107, 0, 0.15);
+  border: 1px solid var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 0 20px var(--color-primary-glow-subtle);
+  backdrop-filter: blur(8px);
+}
+
+.btn-demo:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: none;
+  transform: translateY(-2px);
+}
+
+.btn-github {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: #ffffff;
+}
+
+.btn-github:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* --- SECTION 7: CONTACT / LET'S CONNECT --- */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 4.5rem;
+  align-items: flex-start;
+  font-family: var(--font-body);
+  /* Manrope */
+}
+
+.contact-subtext {
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 1.08rem;
+  margin-bottom: 2.8rem;
+}
+
+.contact-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.contact-info-item {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.c-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  background: rgba(255, 107, 0, 0.1);
+  border: 1px solid rgba(255, 107, 0, 0.2);
+  border-radius: 50%;
+  color: var(--color-primary);
+}
+
+.c-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  text-transform: uppercase;
+}
+
+.c-val {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.c-val:hover {
+  color: var(--color-primary);
+}
+
+/* Contact Form */
+.glowing-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  font-family: var(--font-body);
+  /* Manrope */
+}
+
+.form-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-family: var(--font-body);
+  /* Manrope */
+  padding: 0.5rem 0;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-subtle);
+}
+
+.glow-line-bar {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-top: 0.4rem;
+}
+
+.glow-line-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b00, #ff8c00);
+  box-shadow: 0 0 10px var(--color-primary);
+}
+
+.glow-end-dot {
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
+}
+
+.form-submit-row {
+  margin-top: 1rem;
+}
+
+.btn-send-message {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-family: var(--font-body);
+  /* Manrope */
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--color-primary);
+  transition: var(--transition-fast);
+}
+
+.btn-send-message .arrow {
+  color: var(--color-primary);
+  transition: var(--transition-fast);
+}
+
+.btn-send-message:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-send-message:hover .arrow {
+  transform: translateX(4px);
+}
+
+.btn-bottom-glow-dot {
+  position: absolute;
+  right: -6px;
+  bottom: -4px;
+  width: 6px;
+  height: 6px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-primary);
+}
+
+/* Contact Form Status Notification Box */
+.form-status-msg {
+  display: none;
+  margin-top: 1.2rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: var(--font-body);
+  line-height: 1.5;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInStatus 0.4s ease forwards;
+}
+
+@keyframes fadeInStatus {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-status-msg.success {
+  display: block;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #10b981;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.15);
+}
+
+.form-status-msg.error {
+  display: block;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #ef4444;
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.15);
+}
+
+.btn-send-message.loading {
+  opacity: 0.7;
+  pointer-events: none;
+  cursor: wait;
+}
+
+/* --- FOOTER (Inter Regular 400) --- */
+.footer {
+  position: relative;
+  background: rgba(7, 9, 14, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-subtle);
+  padding: 5rem 0 3rem;
+  font-family: var(--font-footer);
+  /* Inter Regular 400 */
+}
+
+.footer-container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 3.5rem;
+  margin-bottom: 4rem;
+}
+
+.footer-brand-desc {
+  color: var(--text-muted);
+  font-family: var(--font-footer);
+  /* Inter Regular 400 */
+  font-size: 0.92rem;
+  font-weight: 400;
+  margin-top: 1rem;
+  max-width: 260px;
+}
+
+.footer-col-title {
+  font-family: var(--font-footer);
+  /* Inter Regular 400 */
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--text-main);
+  margin-bottom: 1.4rem;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: var(--font-footer);
+  /* Inter Regular 400 */
+  font-size: 0.92rem;
+  font-weight: 400;
+  transition: var(--transition-fast);
+}
+
+.footer-links a:hover {
+  color: var(--color-primary);
+}
+
+.footer-direct-email a {
+  color: var(--color-primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.footer-location {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin-top: 0.4rem;
+}
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: var(--font-footer);
+  /* Inter Regular 400 */
+}
+
+.copyright-text {
+  color: var(--text-subtle);
+  font-size: 0.88rem;
+  font-weight: 400;
+}
+
+.back-to-top {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: var(--transition-fast);
+}
+
+.back-to-top:hover {
+  color: var(--color-primary);
+}
+
+/* ==========================================================================
+   Fluid Responsive System (Breakpoints for Desktop, Tablet & Mobile)
+   ========================================================================== */
+
+/* Laptop / Medium Desktop (1024px - 1199px) */
+@media (max-width: 1199px) {
+  .nav-container {
+    padding: 0 1.5rem;
+  }
+
+  .nav-menu {
+    gap: 1.6rem;
+  }
+}
+
+/* Tablet & Mobile Header Switch (< 1024px) */
+@media (max-width: 1023px) {
+  .header-cta {
+    display: none !important;
+  }
+
+  .hamburger-btn {
+    display: flex !important;
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 300px;
+    max-width: 85vw;
+    height: 100vh;
+    background: rgba(10, 10, 12, 0.97);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-left: 1px solid var(--border-subtle);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.8rem;
+    padding: 3rem 2rem;
+    transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.9);
+  }
+
+  .nav-menu.active {
+    right: 0;
+  }
+
+  .nav-menu .nav-link {
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .mobile-nav-cta {
+    display: inline-flex !important;
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Tablet Layout Optimizations (< 992px) */
+@media (max-width: 991px) {
+  section {
+    padding: 5.5rem 0 4.5rem;
+  }
+
+  .hero-container,
+  .about-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .hero-visual,
+  .about-visual {
+    margin-top: 1rem;
+    justify-content: center;
+  }
+
+  .hero-profile-img {
+    max-width: 320px;
+  }
+
+  .about-profile-img {
+    max-width: 350px;
+  }
+
+  .hero-content {
+    max-width: 100%;
+  }
+
+  .hero-title {
+    font-size: clamp(2.3rem, 6vw, 3.2rem);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+
+  .skills-compact-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  .zigzag-timeline-wrapper::before {
+    left: 30px;
+    transform: translateX(-50%);
+  }
+
+  .zigzag-row {
+    grid-template-columns: 60px 1fr;
+    gap: 1.2rem;
+    height: auto;
+    min-height: auto;
+  }
+
+  .zigzag-row.right-side .zigzag-card,
+  .zigzag-row.left-side .zigzag-card {
+    grid-column: 2;
+    transform: none !important;
+  }
+
+  .zigzag-row.right-side .center-node,
+  .zigzag-row.left-side .center-node {
+    grid-column: 1;
+    width: 60px;
+  }
+
+  .zigzag-row.right-side .node-number,
+  .zigzag-row.left-side .node-number {
+    position: absolute;
+    top: 50%;
+    left: -24px;
+    right: auto;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+  }
+
+  .zigzag-row.right-side .connector-line-horizontal,
+  .zigzag-row.left-side .connector-line-horizontal {
+    display: block;
+    position: absolute;
+    left: 50%;
+    right: -1.2rem;
+    top: 50%;
+    height: 2px;
+    transform: translateY(-50%);
+    background: linear-gradient(90deg, #ff6b00, rgba(255, 107, 0, 0.3));
+  }
+}
+
+/* Mobile Screens (< 768px) */
+@media (max-width: 767px) {
+  section {
+    padding: 3.5rem 0 2.8rem;
+  }
+
+  .nav-container {
+    padding: 0 1.2rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.0rem, 7.5vw, 2.7rem);
+    line-height: 1.25;
+  }
+
+  .section-heading {
+    font-size: clamp(1.8rem, 6vw, 2.3rem);
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  /* Mobile Python Logo Responsiveness */
+  .hero-visual {
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .seamless-graphic-container {
+    max-width: 320px;
+    width: 85%;
+    margin: 0 auto;
+  }
+
+  .hero-profile-img {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .btn-hero-primary,
+  .btn-hero-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .project-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-project {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .skills-header-grid {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .skill-card {
+    padding: 1.2rem;
+  }
+}
+
+/* Small Mobile Devices (< 480px) */
+@media (max-width: 479px) {
+  .nav-container {
+    padding: 0 1rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .skills-compact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-info-cards {
+    flex-direction: column;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+}
+
+/* ==========================================================================
+   WORLD-CLASS PREMIUM SCROLL REVEAL ENGINE
+   - Natural Pop-Up Reveal on Scroll Down (translateY(42px), scale(0.96), blur(4px) → 0)
+   - Smooth Pop-Down Exit on Scroll Up (translateY(36px), scale(0.96), opacity: 0)
+   - High-end GPU accelerated easing: cubic-bezier(0.22, 1, 0.36, 1)
+   ========================================================================== */
+.reveal-element {
+  opacity: 0;
+  transform: translateY(42px) scale(0.96);
+  filter: blur(4px);
+  will-change: opacity, transform, filter;
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.7s ease;
+}
+
+/* Revealed State: Crisp, Fully Visible & Scaled */
+.reveal-element.revealed {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+  filter: blur(0) !important;
+}
+
+/* ==========================================================================
+   TOP-RIGHT PREMIUM TOAST NOTIFICATION SYSTEM (Floating Non-overlapping)
+   ========================================================================== */
+.toast-container {
+  position: fixed;
+  top: 90px;
+  right: 25px;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.toast-notification {
+  pointer-events: auto;
+  min-width: 290px;
+  max-width: 380px;
+  padding: 0.95rem 1.3rem;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(14, 17, 23, 0.92);
+  border: 1px solid rgba(255, 107, 0, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 107, 0, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  opacity: 0;
+  transform: translateX(60px) scale(0.92);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  line-height: 1.45;
+}
+
+.toast-notification.show {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.toast-notification.info {
+  border-color: rgba(255, 107, 0, 0.5);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 107, 0, 0.25);
+}
+
+.toast-notification.success {
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(16, 185, 129, 0.25);
+  color: #ffffff;
+}
+
+.toast-notification.error {
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(239, 68, 68, 0.25);
+  color: #ffffff;
+}
+
+/* Accessibility: Motion Reduction Fallback */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-element {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
