@@ -664,6 +664,8 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 700px;
 }
 
 .section-container {
@@ -1103,12 +1105,10 @@ section {
 @keyframes dotBlink {
   0% {
     opacity: 1;
-    box-shadow: 0 0 10px currentColor;
   }
 
   100% {
-    opacity: 0.15;
-    box-shadow: 0 0 2px currentColor;
+    opacity: 0.2;
   }
 }
 
@@ -2539,7 +2539,7 @@ section {
   opacity: 0;
   transform: translateY(42px) scale(0.96);
   filter: blur(4px);
-  will-change: opacity, transform, filter;
+  will-change: opacity, transform;
   transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
     filter 0.7s ease;
