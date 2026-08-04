@@ -683,7 +683,7 @@ function initScrollReveal() {
     { selector: '.hero-badge', stepDelay: 0.08 },
     { selector: '.hero-title', stepDelay: 0.08 },
     { selector: '.hero-subtitle', stepDelay: 0.08 },
-    { selector: '.hero-bullets', stepDelay: 0.08 },  /* FIX: target the <ul> parent — larger bounding box = reliable IntersectionObserver detection */
+    { selector: '.hero-bullets li', stepDelay: 0.08 },
     { selector: '.hero-actions', stepDelay: 0.08 },
     { selector: '.hero-code-snippet', stepDelay: 0.08 },
     { selector: '.hero-visual', stepDelay: 0.08 },
@@ -767,25 +767,4 @@ function initScrollReveal() {
 
   const allElements = document.querySelectorAll('.reveal-element');
   allElements.forEach((el) => revealObserver.observe(el));
-
-  /* ANIMATION FIX: Hero elements that are already in the viewport when the page loads
-     must be force-revealed on the next animation frame.
-     IntersectionObserver callbacks are async — for elements already visible (hero section),
-     the callback fires correctly but may miss very small elements at threshold 0.08.
-     This pass runs ONCE after DOM layout is complete and uses the exact same
-     .revealed class + CSS transition system — no new animation is created. */
-  requestAnimationFrame(() => {
-    const heroSection = document.getElementById('home');
-    if (!heroSection) return;
-    const heroRevealEls = heroSection.querySelectorAll('.reveal-element');
-    heroRevealEls.forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      const inView = rect.top < window.innerHeight && rect.bottom > 0;
-      if (inView) {
-        /* Reuse fwdDelay already set by applySequence for natural stagger */
-        el.style.transitionDelay = el.dataset.fwdDelay || '0s';
-        el.classList.add('revealed');
-      }
-    });
-  });
 }
