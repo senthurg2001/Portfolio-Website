@@ -47,6 +47,7 @@ function initParticleCanvas() {
   let height = window.innerHeight;
   let animFrameId = null;
   let isTabActive = true;
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (width < 768);
 
   // Particle count adapted for desktop vs mobile performance
   const particles = [];
@@ -55,7 +56,7 @@ function initParticleCanvas() {
     particles.length = 0;
     const isMobile = width < 768;
     const particleCount = isMobile
-      ? Math.min(50, Math.floor((width * height) / 20000))
+      ? Math.min(45, Math.floor((width * height) / 22000))
       : Math.min(110, Math.floor((width * height) / 22000));
 
     for (let i = 0; i < particleCount; i++) {
@@ -75,11 +76,20 @@ function initParticleCanvas() {
   }
 
   function resizeCanvases() {
-    width = bgCanvas.width = window.innerWidth;
-    height = bgCanvas.height = window.innerHeight;
+    const newWidth = window.innerWidth;
+    const newHeight = window.innerHeight;
+
+    // Prevent mid-scroll canvas buffer clearing on mobile address-bar height shifts
+    if (width === newWidth && Math.abs(height - newHeight) < 180) {
+      height = newHeight;
+      return;
+    }
+
+    width = bgCanvas.width = newWidth;
+    height = bgCanvas.height = newHeight;
     if (cursorCanvas) {
-      cursorCanvas.width = width;
-      cursorCanvas.height = height;
+      cursorCanvas.width = newWidth;
+      cursorCanvas.height = newHeight;
     }
     initParticles();
   }
@@ -151,7 +161,7 @@ function initParticleCanvas() {
         cursorY = targetMouseY;
         isMouseActive = true;
       }
-      checkHoverState(targetMouseX, targetMouseY);
+      // Note: checkHoverState omitted on touchmove to prevent forced synchronous layout thrashing during mobile scroll
     }
   }, { passive: true });
 
@@ -754,7 +764,7 @@ function initScrollReveal() {
           el.style.transitionDelay = scrollDirection === 'up' ? rev : fwd;
           el.classList.add('revealed');
         } else {
-          el.style.transitionDelay = scrollDirection === 'up' ? rev : fwd;
+          el.style.transitionDelay = '0s';
           el.classList.remove('revealed');
         }
       });
