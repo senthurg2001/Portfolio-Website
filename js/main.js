@@ -251,8 +251,8 @@ function initParticleCanvas() {
       ctxBg.fill();
     }
 
-    // 3. Render Glowing Main Node Cursor Dot
-    if (isMouseActive) {
+    // 3. Render Glowing Main Node Cursor Dot (Desktop Only)
+    if (!isTouchDevice && isMouseActive && cursorCanvas) {
       const dx = targetMouseX - cursorX;
       const dy = targetMouseY - cursorY;
 

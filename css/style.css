@@ -42,18 +42,26 @@
   --transition-medium: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* --- Hide Default OS Mouse Cursor Across Entire Website --- */
-*,
-*::before,
-*::after,
-html,
-body,
-a,
-button,
-input,
-textarea,
-select {
-  cursor: none !important;
+/* --- Hide Default OS Mouse Cursor Across Entire Website on Desktop Devices --- */
+@media (pointer: fine) {
+  *,
+  *::before,
+  *::after,
+  html,
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    cursor: none !important;
+  }
+}
+
+@media (max-width: 1023px), (pointer: coarse) {
+  #cursorCanvas {
+    display: none !important;
+  }
 }
 
 /* Prevent image selection highlight box & dragging across website */
@@ -297,8 +305,8 @@ body {
 
   27.75% {
     /* Peak ~90% | Phase θ = 1620° */
-    clip-path: polygon(0% -4%, 10% 0%, 20% 10%, 30% 20%, 40% 24%, 50% 20%, 60% 10%, 70% 0%, 80% -4%, 90% 0%, 100% 10%, 100% 100%, 0% 100%);
-    -webkit-clip-path: polygon(0% -4%, 10% 0%, 20% 10%, 30% 20%, 40% 24%, 50% 20%, 60% 10%, 70% 0%, 80% -4%, 90% 0%, 100% 10%, 100% 100%, 0% 100%);
+    clip-path: polygon(0% 0%, 10% 0%, 20% 10%, 30% 20%, 40% 24%, 50% 20%, 60% 10%, 70% 0%, 80% 0%, 90% 0%, 100% 10%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 0%, 10% 0%, 20% 10%, 30% 20%, 40% 24%, 50% 20%, 60% 10%, 70% 0%, 80% 0%, 90% 0%, 100% 10%, 100% 100%, 0% 100%);
   }
 
   28.75% {
@@ -315,14 +323,14 @@ body {
 
   /* --- FINAL PUSH: 80% -> 95% -> 100% Smooth Full Fill --- */
   31.8% {
-    clip-path: polygon(0% 0%, 10% -6%, 20% 5%, 30% 13%, 40% 15%, 50% 10%, 60% 0%, 70% -6%, 80% 0%, 90% 5%, 100% 13%, 100% 100%, 0% 100%);
-    -webkit-clip-path: polygon(0% 0%, 10% -6%, 20% 5%, 30% 13%, 40% 15%, 50% 10%, 60% 0%, 70% -6%, 80% 0%, 90% 5%, 100% 13%, 100% 100%, 0% 100%);
+    clip-path: polygon(0% 0%, 10% 0%, 20% 5%, 30% 13%, 40% 15%, 50% 10%, 60% 0%, 70% 0%, 80% 0%, 90% 5%, 100% 13%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 0%, 10% 0%, 20% 5%, 30% 13%, 40% 15%, 50% 10%, 60% 0%, 70% 0%, 80% 0%, 90% 5%, 100% 13%, 100% 100%, 0% 100%);
   }
 
   32.5% {
     /* 100% Complete Solid Orange Fill */
-    clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
-    -webkit-clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
+    clip-path: polygon(0% 0%, 10% 0%, 20% 0%, 30% 0%, 40% 0%, 50% 0%, 60% 0%, 70% 0%, 80% 0%, 90% 0%, 100% 0%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 0%, 10% 0%, 20% 0%, 30% 0%, 40% 0%, 50% 0%, 60% 0%, 70% 0%, 80% 0%, 90% 0%, 100% 100%, 0% 100%);
   }
 
   /* ==========================================================================
@@ -330,8 +338,8 @@ body {
      ========================================================================== */
   32.5%,
   47.5% {
-    clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
-    -webkit-clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
+    clip-path: polygon(0% 0%, 10% 0%, 20% 0%, 30% 0%, 40% 0%, 50% 0%, 60% 0%, 70% 0%, 80% 0%, 90% 0%, 100% 0%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 0%, 10% 0%, 20% 0%, 30% 0%, 40% 0%, 50% 0%, 60% 0%, 70% 0%, 80% 0%, 90% 0%, 100% 100%, 0% 100%);
   }
 
   /* ==========================================================================
@@ -340,8 +348,8 @@ body {
 
   /* --- REVERSE WAVE 1: 100% -> Fall -> Dip 70% -> Settle 80% -> Hold 0.45s --- */
   49.0% {
-    clip-path: polygon(0% -2%, 10% -8%, 20% 2%, 30% 12%, 40% 16%, 50% 12%, 60% 2%, 70% -8%, 80% -2%, 90% 2%, 100% 12%, 100% 100%, 0% 100%);
-    -webkit-clip-path: polygon(0% -2%, 10% -8%, 20% 2%, 30% 12%, 40% 16%, 50% 12%, 60% 2%, 70% -8%, 80% -2%, 90% 2%, 100% 12%, 100% 100%, 0% 100%);
+    clip-path: polygon(0% 0%, 10% 0%, 20% 2%, 30% 12%, 40% 16%, 50% 12%, 60% 2%, 70% 0%, 80% 0%, 90% 2%, 100% 12%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 0%, 10% 0%, 20% 2%, 30% 12%, 40% 16%, 50% 12%, 60% 2%, 70% 0%, 80% 0%, 90% 2%, 100% 12%, 100% 100%, 0% 100%);
   }
 
   50.5% {
@@ -491,6 +499,27 @@ body {
   z-index: 1000;
   transition: var(--transition-medium);
   font-family: var(--font-header);
+}
+
+.nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .nav-container {
@@ -974,6 +1003,7 @@ section {
   align-items: center;
   position: relative;
   width: 100%;
+  isolation: isolate;
 }
 
 .seamless-graphic-container {
