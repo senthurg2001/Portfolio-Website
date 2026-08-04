@@ -1279,14 +1279,19 @@ section {
 .bullet-dot {
   width: 8px;
   height: 8px;
-  min-width: 8px;        /* Prevent flex-compression on small screens */
-  min-height: 8px;       /* Prevent flex-compression on small screens */
+  min-width: 8px;
+  /* Prevent flex-compression on small screens */
+  min-height: 8px;
+  /* Prevent flex-compression on small screens */
   background: var(--color-primary);
   border-radius: 50%;
   box-shadow: 0 0 8px var(--color-primary);
-  flex-shrink: 0;        /* Lock dot — never let flex compress it */
-  aspect-ratio: 1 / 1;  /* Enforce perfect circle regardless of container */
-  display: inline-block; /* Needed for aspect-ratio to work correctly */
+  flex-shrink: 0;
+  /* Lock dot — never let flex compress it */
+  aspect-ratio: 1 / 1;
+  /* Enforce perfect circle regardless of container */
+  display: inline-block;
+  /* Needed for aspect-ratio to work correctly */
 }
 
 .about-info-cards {
@@ -2272,6 +2277,10 @@ section {
   .zigzag-timeline-wrapper::before {
     left: 30px;
     transform: translateX(-50%);
+    top: 0;
+    /* Remove desktop 15px inset — on responsive, rows are shorter so the inset creates a gap above the first node */
+    bottom: 0;
+    /* Remove desktop 15px inset — ensures line reaches the last node dot */
   }
 
   .zigzag-row {
@@ -2293,21 +2302,33 @@ section {
     width: 60px;
   }
 
-  /* RESPONSIVE FIX: position number above the dot (absolute within center-node),
-     not in flow — which caused overlap with the absolute-positioned dot */
+  /* RESPONSIVE FIX (revised): number sits just above the dot, which is ON the connector line.
+     This aligns the number visually with the existing horizontal connector line.
+     — dot center is at top:50% of center-node (same as connector line)
+     — dot radius is 11px, number height ≈18px
+     — top: calc(50% - 28px) places number bottom ~2px above dot top edge
+     — horizontal: left:50%; translateX(-50%) centres on the timeline vertical axis
+     Desktop is NOT affected: this rule is inside @media(max-width:991px) only.             */
   .zigzag-row.right-side .node-number,
   .zigzag-row.left-side .node-number {
-    position: absolute;       /* Keeps number in the center-node's positioning context */
-    top: 6px;                 /* Sits at the top of the center-node column, above the dot */
-    left: 50%;                /* Horizontally centred on the vertical timeline line */
-    right: auto;              /* Reset desktop right override */
-    transform: translateX(-50%); /* Perfect horizontal centering */
+    position: absolute;
+    top: calc(50% - 28px);
+    /* Just above the dot — at connector line level visually */
+    left: 50%;
+    /* Centred on the timeline vertical axis */
+    right: auto;
+    /* Override desktop right: calc(50% + 20px) */
+    transform: translateX(-50%);
+    /* Perfect horizontal centering */
     font-size: 0.72rem;
+    font-weight: 700;
     display: block;
     text-align: center;
     margin: 0;
     white-space: nowrap;
-    z-index: 6;               /* Above the connector line (z-index: 2) and dot (z-index: 4) */
+    z-index: 6;
+    padding-left: 3rem;
+    /* Above connector (z:2) and dot (z:4) */
   }
 
   .zigzag-row.right-side .connector-line-horizontal,
@@ -2409,8 +2430,10 @@ section {
      on all mobile screen sizes (portrait + landscape) */
   .about-bullets li,
   .hero-bullets li {
-    align-items: flex-start; /* Align to top so long text wraps cleanly */
-    gap: 0.75rem;            /* Slightly tighter gap on mobile */
+    align-items: flex-start;
+    /* Align to top so long text wraps cleanly */
+    gap: 0.75rem;
+    /* Slightly tighter gap on mobile */
   }
 
   .about-bullets li .bullet-dot,
@@ -2421,7 +2444,8 @@ section {
     min-height: 8px;
     flex-shrink: 0;
     aspect-ratio: 1 / 1;
-    margin-top: 0.35rem;   /* Vertically align dot to first line of text */
+    margin-top: 0.35rem;
+    /* Vertically align dot to first line of text */
   }
 
   .project-actions {
