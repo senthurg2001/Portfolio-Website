@@ -43,8 +43,8 @@ function initParticleCanvas() {
   const ctxBg = bgCanvas.getContext('2d', { alpha: true });
   const ctxCursor = cursorCanvas ? cursorCanvas.getContext('2d', { alpha: true }) : ctxBg;
 
-  let width = window.innerWidth;
-  let height = window.innerHeight;
+  let width = 0;
+  let height = 0;
   let animFrameId = null;
   let isTabActive = true;
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (width < 768);
@@ -152,17 +152,8 @@ function initParticleCanvas() {
     checkHoverState(targetMouseX, targetMouseY);
   }, { passive: true });
 
-  window.addEventListener('touchmove', (e) => {
-    if (e.touches.length > 0) {
-      targetMouseX = e.touches[0].clientX;
-      targetMouseY = e.touches[0].clientY;
-      if (!isMouseActive) {
-        cursorX = targetMouseX;
-        cursorY = targetMouseY;
-        isMouseActive = true;
-      }
-      // Note: checkHoverState omitted on touchmove to prevent forced synchronous layout thrashing during mobile scroll
-    }
+  window.addEventListener('touchmove', () => {
+    // Touch drag scrolling on mobile: omit cursor particle tracking to keep GPU & main thread 100% idle for butter-smooth scroll
   }, { passive: true });
 
   // Handle Tab Visibility Changes (Pause canvas when inactive to save battery & CPU)
@@ -251,8 +242,8 @@ function initParticleCanvas() {
       ctxBg.fill();
     }
 
-    // 3. Render Glowing Main Node Cursor Dot (Desktop Only)
-    if (!isTouchDevice && isMouseActive && cursorCanvas) {
+    // 3. Render Glowing Main Node Cursor Dot
+    if (isMouseActive) {
       const dx = targetMouseX - cursorX;
       const dy = targetMouseY - cursorY;
 
@@ -268,17 +259,14 @@ function initParticleCanvas() {
       const ringRadius = isHovering ? 11 : 8;
       const innerRadius = isHovering ? 4 : 2.5;
 
-      // 3A. Outer Glowing Orange Ring with GPU-friendly radial glow
-      ctxCursor.beginPath();
-      ctxCursor.arc(cursorX, cursorY, ringRadius + 4, 0, Math.PI * 2);
-      ctxCursor.fillStyle = isHovering ? 'rgba(255, 107, 0, 0.12)' : 'rgba(255, 107, 0, 0.06)';
-      ctxCursor.fill();
-
+      // 3A. Outer Glowing Orange Ring
       ctxCursor.beginPath();
       ctxCursor.arc(cursorX, cursorY, ringRadius, 0, Math.PI * 2);
       ctxCursor.fillStyle = isHovering ? 'rgba(255, 107, 0, 0.28)' : 'rgba(255, 107, 0, 0.15)';
       ctxCursor.strokeStyle = isHovering ? '#ff8c00' : '#ff6b00';
       ctxCursor.lineWidth = isHovering ? 2.8 : 2.2;
+      ctxCursor.shadowBlur = isHovering ? 22 : 14;
+      ctxCursor.shadowColor = '#ff6b00';
       ctxCursor.stroke();
       ctxCursor.fill();
 
@@ -286,7 +274,11 @@ function initParticleCanvas() {
       ctxCursor.beginPath();
       ctxCursor.arc(cursorX, cursorY, innerRadius, 0, Math.PI * 2);
       ctxCursor.fillStyle = '#ffffff';
+      ctxCursor.shadowBlur = 10;
+      ctxCursor.shadowColor = '#ffffff';
       ctxCursor.fill();
+
+      ctxCursor.shadowBlur = 0;
     }
 
     animFrameId = requestAnimationFrame(render);

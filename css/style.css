@@ -42,26 +42,18 @@
   --transition-medium: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* --- Hide Default OS Mouse Cursor Across Entire Website on Desktop Devices --- */
-@media (pointer: fine) {
-  *,
-  *::before,
-  *::after,
-  html,
-  body,
-  a,
-  button,
-  input,
-  textarea,
-  select {
-    cursor: none !important;
-  }
-}
-
-@media (max-width: 1023px), (pointer: coarse) {
-  #cursorCanvas {
-    display: none !important;
-  }
+/* --- Hide Default OS Mouse Cursor Across Entire Website --- */
+*,
+*::before,
+*::after,
+html,
+body,
+a,
+button,
+input,
+textarea,
+select {
+  cursor: none !important;
 }
 
 /* Prevent image selection highlight box & dragging across website */
@@ -2346,7 +2338,7 @@ section {
     margin: 0;
     white-space: nowrap;
     z-index: 6;
-    padding: 0;
+    padding-left: 3rem;
     /* Above connector (z:2) and dot (z:4) */
   }
 
@@ -2615,6 +2607,13 @@ section {
   transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
     filter 0.7s ease;
+}
+
+/* Mobile GPU Optimization: Bypass heavy Gaussian blur filter on mobile screens during scroll */
+@media (max-width: 767px) {
+  .reveal-element {
+    filter: none !important;
+  }
 }
 
 /* Revealed State: Crisp, Fully Visible & Scaled */
