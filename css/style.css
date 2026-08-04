@@ -2346,7 +2346,7 @@ section {
     margin: 0;
     white-space: nowrap;
     z-index: 6;
-    padding-left: 3rem;
+    padding: 0;
     /* Above connector (z:2) and dot (z:4) */
   }
 

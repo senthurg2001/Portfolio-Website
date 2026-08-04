@@ -319,9 +319,11 @@ function initHeroScrollFadeOut() {
             scrollIndicator.style.pointerEvents = 'none';
           }
         } else {
-          scrollIndicator.style.opacity = '1';
-          scrollIndicator.style.transform = 'translate(-50%, 0px)';
-          scrollIndicator.style.pointerEvents = 'auto';
+          if (scrollIndicator.style.opacity !== '1') {
+            scrollIndicator.style.opacity = '1';
+            scrollIndicator.style.transform = 'translate(-50%, 0px)';
+            scrollIndicator.style.pointerEvents = 'auto';
+          }
         }
         ticking = false;
       });
@@ -366,7 +368,11 @@ function initScrollSpy() {
   }
 
   cacheSectionPositions();
-  window.addEventListener('resize', cacheSectionPositions, { passive: true });
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    if (resizeTimer) cancelAnimationFrame(resizeTimer);
+    resizeTimer = requestAnimationFrame(cacheSectionPositions);
+  }, { passive: true });
 
   let ticking = false;
 
@@ -437,37 +443,7 @@ function initScrollSpy() {
   updateActiveNav();
 }
 
-/* ==========================================================================
-   4. Contact Form Dynamic Feedback
-   ========================================================================== */
-function initContactForm() {
-  const form = document.getElementById('contactForm');
-  if (!form) return;
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const btn = form.querySelector('.btn-send-message');
-    const originalText = btn.innerHTML;
-
-    btn.innerHTML = `Sending... <span class="arrow">⏳</span>`;
-    btn.style.opacity = '0.7';
-
-    setTimeout(() => {
-      btn.innerHTML = `Message Sent! <span class="arrow">✓</span>`;
-      btn.style.color = '#00ff88';
-      btn.style.borderColor = '#00ff88';
-      btn.style.opacity = '1';
-
-      form.reset();
-
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.color = '';
-        btn.style.borderColor = '';
-      }, 3500);
-    }, 1200);
-  });
-}
 
 /* ==========================================================================
    5. Responsive Mobile Navigation Toggle System
