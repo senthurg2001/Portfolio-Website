@@ -17,7 +17,6 @@
   --color-primary-glow: rgba(255, 107, 0, 0.4);
   --color-primary-glow-subtle: rgba(255, 107, 0, 0.15);
   --color-accent: #ff8c00;
-
   --text-main: #f0f4fc;
   --text-muted: #8c9baf;
   --text-subtle: #566479;
@@ -1280,9 +1279,14 @@ section {
 .bullet-dot {
   width: 8px;
   height: 8px;
+  min-width: 8px;        /* Prevent flex-compression on small screens */
+  min-height: 8px;       /* Prevent flex-compression on small screens */
   background: var(--color-primary);
   border-radius: 50%;
   box-shadow: 0 0 8px var(--color-primary);
+  flex-shrink: 0;        /* Lock dot — never let flex compress it */
+  aspect-ratio: 1 / 1;  /* Enforce perfect circle regardless of container */
+  display: inline-block; /* Needed for aspect-ratio to work correctly */
 }
 
 .about-info-cards {
@@ -2050,6 +2054,7 @@ section {
   border-top: 1px solid var(--border-subtle);
   padding: 5rem 0 3rem;
   font-family: var(--font-footer);
+  padding-top: 1px;
   /* Inter Regular 400 */
 }
 
@@ -2057,6 +2062,7 @@ section {
   max-width: var(--container-max-width);
   margin: 0 auto;
   padding: 0 2rem;
+  padding-top: 2rem;
 }
 
 .footer-grid {
@@ -2287,16 +2293,21 @@ section {
     width: 60px;
   }
 
+  /* RESPONSIVE FIX: position number above the dot (absolute within center-node),
+     not in flow — which caused overlap with the absolute-positioned dot */
   .zigzag-row.right-side .node-number,
   .zigzag-row.left-side .node-number {
-    position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
-    transform: none;
-    font-size: 0.8rem;
-    display: inline-block;
-    margin-right: 0.3rem;
+    position: absolute;       /* Keeps number in the center-node's positioning context */
+    top: 6px;                 /* Sits at the top of the center-node column, above the dot */
+    left: 50%;                /* Horizontally centred on the vertical timeline line */
+    right: auto;              /* Reset desktop right override */
+    transform: translateX(-50%); /* Perfect horizontal centering */
+    font-size: 0.72rem;
+    display: block;
+    text-align: center;
+    margin: 0;
+    white-space: nowrap;
+    z-index: 6;               /* Above the connector line (z-index: 2) and dot (z-index: 4) */
   }
 
   .zigzag-row.right-side .connector-line-horizontal,
@@ -2392,6 +2403,25 @@ section {
 
   .code-snippet-body {
     font-size: 0.82rem;
+  }
+
+  /* RESPONSIVE FIX — Bullet dot mobile guard: enforce perfect circle
+     on all mobile screen sizes (portrait + landscape) */
+  .about-bullets li,
+  .hero-bullets li {
+    align-items: flex-start; /* Align to top so long text wraps cleanly */
+    gap: 0.75rem;            /* Slightly tighter gap on mobile */
+  }
+
+  .about-bullets li .bullet-dot,
+  .hero-bullets li .bullet-dot {
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    min-height: 8px;
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
+    margin-top: 0.35rem;   /* Vertically align dot to first line of text */
   }
 
   .project-actions {

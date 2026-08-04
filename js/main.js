@@ -683,6 +683,7 @@ function initScrollReveal() {
     { selector: '.hero-badge', stepDelay: 0.08 },
     { selector: '.hero-title', stepDelay: 0.08 },
     { selector: '.hero-subtitle', stepDelay: 0.08 },
+    { selector: '.hero-bullets', stepDelay: 0.08 },  /* FIX: target the <ul> parent — larger bounding box = reliable IntersectionObserver detection */
     { selector: '.hero-actions', stepDelay: 0.08 },
     { selector: '.hero-code-snippet', stepDelay: 0.08 },
     { selector: '.hero-visual', stepDelay: 0.08 },
