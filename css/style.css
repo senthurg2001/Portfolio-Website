@@ -2301,6 +2301,7 @@ section {
     font-size: 0.8rem;
     display: inline-block;
     margin-right: 0.3rem;
+    padding-left: 8rem;
   }
 
   .zigzag-row.right-side .connector-line-horizontal,
