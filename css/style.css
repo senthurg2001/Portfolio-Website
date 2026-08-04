@@ -17,6 +17,7 @@
   --color-primary-glow: rgba(255, 107, 0, 0.4);
   --color-primary-glow-subtle: rgba(255, 107, 0, 0.15);
   --color-accent: #ff8c00;
+
   --text-main: #f0f4fc;
   --text-muted: #8c9baf;
   --text-subtle: #566479;
@@ -71,9 +72,8 @@ img {
   left: 0;
   width: 100vw;
   height: 100vh;
-  height: 100dvh;
   pointer-events: none;
-  z-index: -1;
+  z-index: 1;
 }
 
 #cursorCanvas {
@@ -82,7 +82,6 @@ img {
   left: 0;
   width: 100vw;
   height: 100vh;
-  height: 100dvh;
   pointer-events: none;
   z-index: 99999;
 }
@@ -120,6 +119,17 @@ body {
 .main-wrapper {
   width: 100%;
   overflow-x: hidden;
+}
+
+/* Background Canvas */
+#bgCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* Utility Helpers */
@@ -167,6 +177,8 @@ body {
   -webkit-text-stroke: 0;
   clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
   -webkit-clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+  transform: translateZ(0);
+  will-change: clip-path;
   animation: tidalWaterBounceFill 20s cubic-bezier(0.42, 0, 0.58, 1) infinite;
   pointer-events: none;
 }
@@ -297,8 +309,8 @@ body {
 
   27.75% {
     /* Peak ~90% | Phase θ = 1620° */
-    clip-path: polygon(0% 0%, 10% 0%, 20% 10%, 30% 20%, 40% 24%, 50% 20%, 60% 10%, 70% 0%, 80% 0%, 90% 0%, 100% 10%, 100% 100%, 0% 100%);
-    -webkit-clip-path: polygon(0% 0%, 10% 0%, 20% 10%, 30% 20%, 40% 24%, 50% 20%, 60% 10%, 70% 0%, 80% 0%, 90% 0%, 100% 10%, 100% 100%, 0% 100%);
+    clip-path: polygon(0% -4%, 10% 0%, 20% 10%, 30% 20%, 40% 24%, 50% 20%, 60% 10%, 70% 0%, 80% -4%, 90% 0%, 100% 10%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% -4%, 10% 0%, 20% 10%, 30% 20%, 40% 24%, 50% 20%, 60% 10%, 70% 0%, 80% -4%, 90% 0%, 100% 10%, 100% 100%, 0% 100%);
   }
 
   28.75% {
@@ -315,14 +327,14 @@ body {
 
   /* --- FINAL PUSH: 80% -> 95% -> 100% Smooth Full Fill --- */
   31.8% {
-    clip-path: polygon(0% 0%, 10% 0%, 20% 5%, 30% 13%, 40% 15%, 50% 10%, 60% 0%, 70% 0%, 80% 0%, 90% 5%, 100% 13%, 100% 100%, 0% 100%);
-    -webkit-clip-path: polygon(0% 0%, 10% 0%, 20% 5%, 30% 13%, 40% 15%, 50% 10%, 60% 0%, 70% 0%, 80% 0%, 90% 5%, 100% 13%, 100% 100%, 0% 100%);
+    clip-path: polygon(0% 0%, 10% -6%, 20% 5%, 30% 13%, 40% 15%, 50% 10%, 60% 0%, 70% -6%, 80% 0%, 90% 5%, 100% 13%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% 0%, 10% -6%, 20% 5%, 30% 13%, 40% 15%, 50% 10%, 60% 0%, 70% -6%, 80% 0%, 90% 5%, 100% 13%, 100% 100%, 0% 100%);
   }
 
   32.5% {
     /* 100% Complete Solid Orange Fill */
-    clip-path: polygon(0% 0%, 10% 0%, 20% 0%, 30% 0%, 40% 0%, 50% 0%, 60% 0%, 70% 0%, 80% 0%, 90% 0%, 100% 0%, 100% 100%, 0% 100%);
-    -webkit-clip-path: polygon(0% 0%, 10% 0%, 20% 0%, 30% 0%, 40% 0%, 50% 0%, 60% 0%, 70% 0%, 80% 0%, 90% 0%, 100% 100%, 0% 100%);
+    clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
   }
 
   /* ==========================================================================
@@ -330,8 +342,8 @@ body {
      ========================================================================== */
   32.5%,
   47.5% {
-    clip-path: polygon(0% 0%, 10% 0%, 20% 0%, 30% 0%, 40% 0%, 50% 0%, 60% 0%, 70% 0%, 80% 0%, 90% 0%, 100% 0%, 100% 100%, 0% 100%);
-    -webkit-clip-path: polygon(0% 0%, 10% 0%, 20% 0%, 30% 0%, 40% 0%, 50% 0%, 60% 0%, 70% 0%, 80% 0%, 90% 0%, 100% 100%, 0% 100%);
+    clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% -10%, 10% -10%, 20% -10%, 30% -10%, 40% -10%, 50% -10%, 60% -10%, 70% -10%, 80% -10%, 90% -10%, 100% -10%, 100% 100%, 0% 100%);
   }
 
   /* ==========================================================================
@@ -340,8 +352,8 @@ body {
 
   /* --- REVERSE WAVE 1: 100% -> Fall -> Dip 70% -> Settle 80% -> Hold 0.45s --- */
   49.0% {
-    clip-path: polygon(0% 0%, 10% 0%, 20% 2%, 30% 12%, 40% 16%, 50% 12%, 60% 2%, 70% 0%, 80% 0%, 90% 2%, 100% 12%, 100% 100%, 0% 100%);
-    -webkit-clip-path: polygon(0% 0%, 10% 0%, 20% 2%, 30% 12%, 40% 16%, 50% 12%, 60% 2%, 70% 0%, 80% 0%, 90% 2%, 100% 12%, 100% 100%, 0% 100%);
+    clip-path: polygon(0% -2%, 10% -8%, 20% 2%, 30% 12%, 40% 16%, 50% 12%, 60% 2%, 70% -8%, 80% -2%, 90% 2%, 100% 12%, 100% 100%, 0% 100%);
+    -webkit-clip-path: polygon(0% -2%, 10% -8%, 20% 2%, 30% 12%, 40% 16%, 50% 12%, 60% 2%, 70% -8%, 80% -2%, 90% 2%, 100% 12%, 100% 100%, 0% 100%);
   }
 
   50.5% {
@@ -487,31 +499,12 @@ body {
   background: var(--bg-header);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  transform: translateZ(0);
+  will-change: transform;
   border-bottom: 1px solid var(--border-subtle);
   z-index: 1000;
   transition: var(--transition-medium);
   font-family: var(--font-header);
-}
-
-.nav-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 1000;
-  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.nav-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
 }
 
 .nav-container {
@@ -995,7 +988,6 @@ section {
   align-items: center;
   position: relative;
   width: 100%;
-  isolation: isolate;
 }
 
 .seamless-graphic-container {
@@ -1115,10 +1107,12 @@ section {
 @keyframes dotBlink {
   0% {
     opacity: 1;
+    box-shadow: 0 0 10px currentColor;
   }
 
   100% {
-    opacity: 0.2;
+    opacity: 0.15;
+    box-shadow: 0 0 2px currentColor;
   }
 }
 
@@ -1290,19 +1284,9 @@ section {
 .bullet-dot {
   width: 8px;
   height: 8px;
-  min-width: 8px;
-  /* Prevent flex-compression on small screens */
-  min-height: 8px;
-  /* Prevent flex-compression on small screens */
   background: var(--color-primary);
   border-radius: 50%;
   box-shadow: 0 0 8px var(--color-primary);
-  flex-shrink: 0;
-  /* Lock dot — never let flex compress it */
-  aspect-ratio: 1 / 1;
-  /* Enforce perfect circle regardless of container */
-  display: inline-block;
-  /* Needed for aspect-ratio to work correctly */
 }
 
 .about-info-cards {
@@ -2070,7 +2054,6 @@ section {
   border-top: 1px solid var(--border-subtle);
   padding: 5rem 0 3rem;
   font-family: var(--font-footer);
-  padding-top: 1px;
   /* Inter Regular 400 */
 }
 
@@ -2078,7 +2061,6 @@ section {
   max-width: var(--container-max-width);
   margin: 0 auto;
   padding: 0 2rem;
-  padding-top: 2rem;
 }
 
 .footer-grid {
@@ -2288,10 +2270,6 @@ section {
   .zigzag-timeline-wrapper::before {
     left: 30px;
     transform: translateX(-50%);
-    top: 0;
-    /* Remove desktop 15px inset — on responsive, rows are shorter so the inset creates a gap above the first node */
-    bottom: 0;
-    /* Remove desktop 15px inset — ensures line reaches the last node dot */
   }
 
   .zigzag-row {
@@ -2313,33 +2291,16 @@ section {
     width: 60px;
   }
 
-  /* RESPONSIVE FIX (revised): number sits just above the dot, which is ON the connector line.
-     This aligns the number visually with the existing horizontal connector line.
-     — dot center is at top:50% of center-node (same as connector line)
-     — dot radius is 11px, number height ≈18px
-     — top: calc(50% - 28px) places number bottom ~2px above dot top edge
-     — horizontal: left:50%; translateX(-50%) centres on the timeline vertical axis
-     Desktop is NOT affected: this rule is inside @media(max-width:991px) only.             */
   .zigzag-row.right-side .node-number,
   .zigzag-row.left-side .node-number {
-    position: absolute;
-    top: calc(50% - 28px);
-    /* Just above the dot — at connector line level visually */
-    left: 50%;
-    /* Centred on the timeline vertical axis */
+    position: relative;
+    top: auto;
+    left: auto;
     right: auto;
-    /* Override desktop right: calc(50% + 20px) */
-    transform: translateX(-50%);
-    /* Perfect horizontal centering */
-    font-size: 0.72rem;
-    font-weight: 700;
-    display: block;
-    text-align: center;
-    margin: 0;
-    white-space: nowrap;
-    z-index: 6;
-    padding-left: 3rem;
-    /* Above connector (z:2) and dot (z:4) */
+    transform: none;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-right: 0.3rem;
   }
 
   .zigzag-row.right-side .connector-line-horizontal,
@@ -2435,28 +2396,6 @@ section {
 
   .code-snippet-body {
     font-size: 0.82rem;
-  }
-
-  /* RESPONSIVE FIX — Bullet dot mobile guard: enforce perfect circle
-     on all mobile screen sizes (portrait + landscape) */
-  .about-bullets li,
-  .hero-bullets li {
-    align-items: flex-start;
-    /* Align to top so long text wraps cleanly */
-    gap: 0.75rem;
-    /* Slightly tighter gap on mobile */
-  }
-
-  .about-bullets li .bullet-dot,
-  .hero-bullets li .bullet-dot {
-    width: 8px;
-    height: 8px;
-    min-width: 8px;
-    min-height: 8px;
-    flex-shrink: 0;
-    aspect-ratio: 1 / 1;
-    margin-top: 0.35rem;
-    /* Vertically align dot to first line of text */
   }
 
   .project-actions {
@@ -2602,25 +2541,26 @@ section {
    ========================================================================== */
 .reveal-element {
   opacity: 0;
-  transform: translate3d(0, 42px, 0) scale(0.96);
-  filter: blur(4px);
+  transform: translateY(42px) scale(0.96);
   transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.7s ease;
-}
-
-/* Mobile GPU Optimization: Bypass heavy Gaussian blur filter on mobile screens during scroll */
-@media (max-width: 767px) {
-  .reveal-element {
-    filter: none !important;
-  }
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Revealed State: Crisp, Fully Visible & Scaled */
 .reveal-element.revealed {
   opacity: 1 !important;
-  transform: translate3d(0, 0, 0) scale(1) !important;
-  filter: blur(0) !important;
+  transform: translateY(0) scale(1) !important;
+}
+
+/* --- High Performance Content Visibility & Rendering Containment --- */
+.about-section,
+.overview-section,
+.education-section,
+.skills-section,
+.projects-section,
+.contact-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 800px;
 }
 
 /* ==========================================================================
