@@ -323,6 +323,7 @@ function initScrollSpy() {
     { id: 'about', key: 'about' },
     { id: 'overview', key: 'about' },   // Numbers That Define Me maps to 'About' tab
     { id: 'education', key: 'education' },
+    { id: 'experience', key: 'experience' },
     { id: 'skills', key: 'skills' },
     { id: 'projects', key: 'projects' },
     { id: 'contact', key: 'contact' }
@@ -718,7 +719,16 @@ function initScrollReveal() {
     { selector: '.zigzag-row', stepDelay: 0.12 },
   ]);
 
-  // 5. Technical Skills Sequence
+  // 5. Experience Sequence
+  applySequence('#experience', [
+    { selector: '.section-tag', stepDelay: 0.07 },
+    { selector: '.section-heading', stepDelay: 0.07 },
+    { selector: '.section-subtitle', stepDelay: 0.07 },
+    { selector: '.experience-card', stepDelay: 0.1 },
+    { selector: '.exp-bullet-item', stepDelay: 0.06 },
+  ]);
+
+  // 6. Technical Skills Sequence
   applySequence('#skills', [
     { selector: '.section-tag', stepDelay: 0.06 },
     { selector: '.section-heading', stepDelay: 0.06 },
