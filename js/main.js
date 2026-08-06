@@ -329,29 +329,6 @@ function initScrollSpy() {
     { id: 'contact', key: 'contact' }
   ];
 
-  let cachedSections = [];
-
-  function cacheSectionPositions() {
-    cachedSections = [];
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-    sections.forEach((sec) => {
-      const el = document.getElementById(sec.id);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        const top = rect.top + scrollY;
-        cachedSections.push({
-          key: sec.key,
-          top: top,
-          bottom: top + rect.height
-        });
-      }
-    });
-  }
-
-  cacheSectionPositions();
-  window.addEventListener('load', cacheSectionPositions, { passive: true });
-  window.addEventListener('resize', cacheSectionPositions, { passive: true });
-
   let currentActiveKey = null;
   let isTicking = false;
 
@@ -366,21 +343,24 @@ function initScrollSpy() {
       return;
     }
 
-    // 2. Near bottom of page (within 60px of page end), activate 'contact'
-    if (viewportHeight + pageY >= documentHeight - 60) {
+    // 2. Near bottom of page (within 80px of page end), activate 'contact'
+    if (viewportHeight + pageY >= documentHeight - 80) {
       setActive('contact');
       return;
     }
 
-    // 3. Dynamic viewport focus line (40% down screen)
-    const triggerLine = pageY + viewportHeight * 0.4;
+    // 3. Real-time Live Bounding Rect position check (Zero stale positions on image/layout shifts)
     let activeKey = null;
+    const triggerOffset = viewportHeight * 0.35;
 
-    for (let i = 0; i < cachedSections.length; i++) {
-      const sec = cachedSections[i];
-      if (triggerLine >= sec.top && triggerLine <= sec.bottom) {
-        activeKey = sec.key;
-        break;
+    for (let i = 0; i < sections.length; i++) {
+      const sec = sections[i];
+      const el = document.getElementById(sec.id);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= triggerOffset && rect.bottom >= 100) {
+          activeKey = sec.key;
+        }
       }
     }
 
